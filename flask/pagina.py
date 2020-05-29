@@ -13,6 +13,7 @@ app = Flask(__name__)
 def home():
     return render_template("home.html")
 
+#atualiza automaticamente
     
 if __name__ == "__main__":
     app.debug = True
