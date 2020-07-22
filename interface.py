@@ -8,6 +8,9 @@ from tkinter import *
 import pandas as pd
 from tkinter import * 
 from tkinter.ttk import *
+
+# Importar a função que classifica as manchetes
+#from funcao.ipynb import classificar
   
 # importing askopenfile function 
 # from class filedialog 
@@ -15,6 +18,7 @@ from tkinter.filedialog import askopenfile
 
 root = Tk() 
 root.geometry('200x100') 
+
   
 # This function will be used to open 
 # file in read mode and only Python files 
@@ -28,6 +32,11 @@ def open_file():
         print(content) 
   
 btn = Button(root, text ='Open', command = lambda:open_file()) 
-btn.pack(side = TOP, pady = 10) 
+btn.pack(side = TOP, pady = 10)     
+    
+
+proc = Button (root, text ='Processar', command = lambda:classificar(content)) 
+proc.pack() 
+
   
 mainloop() 
