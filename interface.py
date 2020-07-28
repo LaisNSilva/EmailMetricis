@@ -5,16 +5,25 @@ Created on Wed Jul 15 19:33:40 2020
 @author: Fernando
 """
 from tkinter import *
-import pandas as pd
-from tkinter import * 
+import pandas as pd 
 from tkinter.ttk import *
+import re
+from textblob import TextBlob
+from tqdm.auto import tqdm
 
 # Importar a função que classifica as manchetes
 #from funcao.ipynb import classificar
   
 # importing askopenfile function 
 # from class filedialog 
-from tkinter.filedialog import askopenfile 
+from tkinter.filedialog import askopenfile
+from sklearn.model_selection import train_test_split
+from sklearn import svm
+from sklearn.metrics import f1_score, recall_score
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import TfidfTransformer
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import precision_score
 
 root = Tk() 
 root.geometry('200x100') 
@@ -22,20 +31,238 @@ root.geometry('200x100')
   
 # This function will be used to open 
 # file in read mode and only Python files 
-# will be opened 
+# will be opened
+
+relevantes = pd.read_excel("ManchetesRelevantes.xlsx")
+
+def cleanup(text):
+    import string
+    punctuation = '[\/!-.:?;]' # Note que os sinais [] são delimitadores de um conjunto.
+    pattern = re.compile(punctuation)
+    text_subbed = re.sub(pattern, ' ', text)
+    return text_subbed
+
+def prepara_novo_data_set(dataset):
+    data = dataset
+    global relevantes    
+    
+    #------------------------------------------------------------------
+    manchetes = {}
+    contador = 0
+    email=[]
+    lista_manchetes=[]
+    numero_atual = 0
+    loop = tqdm(total = data.shape[0], position = 0, leave = False)
+    for i in data.HTML.index:
+        loop.set_description("Extraindo manchetes...".format(numero_atual))
+        loop.update(1)
+        numero_atual += 1
+        texto = str(data.HTML[i])
+
+        for indice in range(len(texto)):
+
+            if texto[indice:indice+7] == "message":
+
+                manchete_incial = texto[indice+11:indice+150]
+                achou = False
+                manchete = " "
+                indice_letra = 0
+                email.append(i+2)
+
+                while indice_letra < len(manchete_incial):
+
+                    if manchete_incial[indice_letra] == "}":
+
+                        manchete = manchete_incial[0:indice_letra-6]
+                        achou = True
+                        manchetes[contador] = manchete
+
+                        manchete_limpa = cleanup(manchete)
+                        manchete_min = manchete_limpa.lower()
+
+                        try:
+                            hi_blob = TextBlob(manchete_min)
+                            manchete_pronta = hi_blob.translate(to='en')
+                        except:
+                            manchete_pronta = manchete_min
+
+                        lista_manchetes.append(str(manchete_pronta))
+                        contador += 1
+                        break
+
+                    else:
+
+                        indice_letra += 1
+    loop.close()
+    #------------------------------------------------------------------
+    lista_links = []
+    for linha in data.HTML.index:   #Percorre cada linha do dataset
+        texto = data.HTML[linha]
+
+        contador_de_titulos = 0
+        for indice in range(len(texto)-7):
+            if texto[indice:indice+7] == "message":
+                contador_de_titulos += 1
+
+
+
+        indice = 0
+        texto_com_url = ""
+
+        while indice < len(texto):  #Percorre o texto dentro da linha
+            if texto[indice:indice + 7] == "widgets":
+                while True:
+                    if texto[indice+5:indice+8] == "} ]":
+                        break
+                    else:
+                        texto_com_url += texto[indice+8]
+                        indice += 1
+                break 
+            else:
+                indice += 1
+
+
+        indice = 0
+        numero_atual_de_titulos = 0
+
+        while indice < len(texto_com_url) and numero_atual_de_titulos < contador_de_titulos:
+            if texto_com_url[indice : indice+3] == "url":
+                link = ""
+                while True:
+                    if texto_com_url[indice+7] == '"':
+                        numero_atual_de_titulos += 1
+                        break
+                    else:
+                        link += texto_com_url[indice+7]
+                        indice += 1
+                lista_links.append(link)
+            else:
+                indice += 1
+    #------------------------------------------------------------------
+    indice_lista = 0
+    while indice_lista < len(lista_links):
+        contador_de_https = 0
+        contador = 0
+        link = lista_links[indice_lista]
+        while contador < len(link):
+            if link[contador:contador+5] == "https" or link[contador:contador+4] == "http":
+                contador_de_https += 1
+            if contador_de_https == 2:
+                link_completo = link[contador:len(link)]
+                link_final = ""
+                indice_google = 0
+                while indice_google < len(link_completo):
+
+                    if link_completo[indice_google : indice_google+7] == "u0026ct":
+                        break
+                    else:
+                        link_final += link_completo[indice_google]
+                        indice_google += 1
+
+                lista_links[indice_lista] = link_final
+                break
+            contador += 1
+
+        indice_lista += 1
+    #------------------------------------------------------------------
+    
+    dicionario = {}
+    
+    dicionario['Manchetes'] = lista_manchetes
+    #dicionario['Indice'] = email
+    dicionario['Link'] = lista_links
+    
+    data_manchetes = pd.DataFrame(data=dicionario)
+    
+    result = pd.concat([data, data_manchetes], ignore_index=True, axis=1)
+    
+    result.columns = ['Data','De','HTML','Resumo','Manchete','Link']
+    
+    result["Relevância"] = int(0)
+            
+    return result
+
+# Pegando as manchestes do arquivo novo
+def classifica_novo_data_set(dataset, modelo):
+    dicionario = dict()
+    manchetes_relevantes = []
+    links_relevantes = []
+    
+    X = dataset.loc[:, "Manchete"]
+    
+    count_vect = CountVectorizer()
+    X_train_counts = count_vect.fit_transform(X)
+
+    tfidf_transformer = TfidfTransformer()
+    X_train_tfidf = tfidf_transformer.fit_transform(X_train_counts)
+    
+    preditct = modelo.predict(X_train_tfidf)
+    
+    for indice in range(len(dataset.index)):
+        dataset["Relevância"][linha] = int(redict[indice])
+    
+    retorno = dataset.loc[dataset["Relevância"] == 1]
+    
+    data_pandas = pd.DataFrame(data=retorno)
+    
+    return data_pandas
+
+
+
+def classificar (treino, arquivo):
+    global relevantes
+    
+    # Pegando as manchetes e suas respctivas relevâncias 
+    X_para_treinar = treino.loc[:, "Manchete"]
+    Y_para_treinar = treino.loc[:, "Relevância"]
+    ##y = arquivo.loc[:, "Relevância"]
+    
+    # Vetorizando
+    count_vect = CountVectorizer()
+    X_train_counts = count_vect.fit_transform(X_para_treinar)
+
+    tfidf_transformer = TfidfTransformer()
+    X_train_tfidf = tfidf_transformer.fit_transform(X_train_counts)
+    
+    # Sepando em teste e treino
+    # Porém vou colocar tudo para treino
+    X_train, X_test, y_train, y_test = train_test_split(X_train_tfidf, Y_para_treinar, test_size=0.01, random_state=42)
+    
+    #Aplicando o modelo SVM (Support Vector Machine)
+
+    kernels = ['linear', 'poly', 'rbf', 'sigmoid', 'precomputed']
+
+    model = svm.SVC(kernel = 'linear') #Kernel
+
+    #Dando fit no modelo SVM usando o dataset de treino
+    model.fit(X_train, y_train)
+ # -------------------------------------------------------------------------------------------------------------   
+    #Tratando o dataset escolhido
+    dataset_escolhido_preparado = prepara_novo_data_set(arquivo)
+    
+    # Pegando as manchestes do arquivo novo
+    planilha_pandas = classifica_novo_data_set(dataset_escolhido_preparado, model)
+    
+    # Tranformando em Excel
+    planilha = planilha_pandas.to_excel (r'base_classificada.xlsx ', index = False)
+    
+
+base_para_treinar = pd.read_excel("base_pronta.xlsx")
+content = None
+
 def open_file(): 
+    global content
     file = askopenfile(mode ='r', filetypes =[('Excel Files', '*.xlsx')]) 
     if file is not None: 
         file_name = file.name
         print(file_name)
-        content = pd.read_excel(file_name) 
-        print(content) 
+        content = pd.read_excel(file_name)  
   
 btn = Button(root, text ='Open', command = lambda:open_file()) 
 btn.pack(side = TOP, pady = 10)     
     
 
-proc = Button (root, text ='Processar', command = lambda:classificar(content)) 
+proc = Button (root, text ='Processar', command = lambda:classificar(base_para_treinar, content)) 
 proc.pack() 
 
   
