@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
 Created on Wed Jul 15 19:33:40 2020
-
 @author: Fernando
 """
 from tkinter import *
@@ -178,56 +177,35 @@ def prepara_novo_data_set(dataset):
     
     result.columns = ['Data','De','HTML','Resumo','Manchete','Link']
     
-    result["Relevância"] = int(0)
+    result["Relevância"] = int(1)
             
     return result
 
-# Pegando as manchestes do arquivo novo
-def classifica_novo_data_set(dataset, modelo):
-    dicionario = dict()
-    manchetes_relevantes = []
-    links_relevantes = []
-    
-    X = dataset.loc[:, "Manchete"]
-    
-    count_vect = CountVectorizer()
-    X_train_counts = count_vect.fit_transform(X)
+def classifica_dataset(dataset, model, count_vect):
+    X = dataset.loc[:,"Manchete"]
+    pred = count_vect.transform(X).toarray()
+    predict = model.predict(pred)
 
-    tfidf_transformer = TfidfTransformer()
-    X_train_tfidf = tfidf_transformer.fit_transform(X_train_counts)
-    
-    preditct = modelo.predict(X_train_tfidf)
-    
-    for indice in range(len(dataset.index)):
-        dataset["Relevância"][linha] = int(redict[indice])
-    
-    retorno = dataset.loc[dataset["Relevância"] == 1]
-    
-    data_pandas = pd.DataFrame(data=retorno)
-    
-    return data_pandas
+    dataset["Relevância"] = pd.Series(predict)
 
+    return dataset
 
 
 def classificar (treino, arquivo):
     global relevantes
     
-    # Pegando as manchetes e suas respctivas relevâncias 
     X_para_treinar = treino.loc[:, "Manchete"]
     Y_para_treinar = treino.loc[:, "Relevância"]
     ##y = arquivo.loc[:, "Relevância"]
-    
+
     # Vetorizando
     count_vect = CountVectorizer()
-    X_train_counts = count_vect.fit_transform(X_para_treinar)
+    X_train_counts = count_vect.fit_transform(X_para_treinar).toarray()
 
-    tfidf_transformer = TfidfTransformer()
-    X_train_tfidf = tfidf_transformer.fit_transform(X_train_counts)
-    
+
     # Sepando em teste e treino
     # Porém vou colocar tudo para treino
-    X_train, X_test, y_train, y_test = train_test_split(X_train_tfidf, Y_para_treinar, test_size=0.01, random_state=42)
-    
+    X_train, X_test, y_train, y_test = train_test_split(X_train_counts, Y_para_treinar, test_size=0.001, random_state=42)
     #Aplicando o modelo SVM (Support Vector Machine)
 
     kernels = ['linear', 'poly', 'rbf', 'sigmoid', 'precomputed']
@@ -236,15 +214,21 @@ def classificar (treino, arquivo):
 
     #Dando fit no modelo SVM usando o dataset de treino
     model.fit(X_train, y_train)
- # -------------------------------------------------------------------------------------------------------------   
+     # -------------------------------------------------------------------------------------------------------------   
     #Tratando o dataset escolhido
     dataset_escolhido_preparado = prepara_novo_data_set(arquivo)
     
-    # Pegando as manchestes do arquivo novo
-    planilha_pandas = classifica_novo_data_set(dataset_escolhido_preparado, model)
+    planilha_classificada = classifica_dataset(dataset_escolhido_preparado, model, count_vect)
+
+    if planilha_classificada["Relevância"].max() == 0:
+        print("NENHUMA MANCHETE RELEVANTE ENCONTRADA!")
+    else:
+        planilha_final = planilha_classificada.loc[planilha_classificada["Relevância"] == 1][["Manchete", "Link", "Relevância"]]
+        planilha = planilha_final.to_excel('base_classificada.xlsx', index = False)
+        print("A BASE DE DADOS FOI BAIXADA NA PASTA DO REPOSITÓRIO!")
     
     # Tranformando em Excel
-    planilha = planilha_pandas.to_excel (r'base_classificada.xlsx ', index = False)
+    #planilha = planilha_pandas.to_excel (r'base_classificada.xlsx ', index = False)
     
 
 base_para_treinar = pd.read_excel("base_pronta.xlsx")
@@ -262,7 +246,7 @@ btn = Button(root, text ='Open', command = lambda:open_file())
 btn.pack(side = TOP, pady = 10)     
     
 
-proc = Button (root, text ='Processar', command = lambda:classificar(base_para_treinar, content)) 
+proc = Button (root, text ='Process', command = lambda:classificar(base_para_treinar, content)) 
 proc.pack() 
 
   
