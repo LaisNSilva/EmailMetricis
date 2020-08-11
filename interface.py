@@ -9,6 +9,8 @@ from tkinter.ttk import *
 import re
 from textblob import TextBlob
 from tqdm.auto import tqdm
+from tkinter import Label
+import time
 
 # Importar a função que classifica as manchetes
 #from funcao.ipynb import classificar
@@ -25,7 +27,12 @@ from sklearn.metrics import confusion_matrix
 from sklearn.metrics import precision_score
 
 root = Tk() 
-root.geometry('200x100') 
+root.geometry('400x130') 
+
+progress = Progressbar(root, orient = HORIZONTAL, 
+              length = 180, mode = 'determinate') 
+file_text = Text(root, height=0.5, width=22)
+
 
   
 # This function will be used to open 
@@ -53,6 +60,7 @@ def prepara_novo_data_set(dataset):
     numero_atual = 0
     loop = tqdm(total = data.shape[0], position = 0, leave = False)
     for i in data.HTML.index:
+        
         loop.set_description("Extraindo manchetes...".format(numero_atual))
         loop.update(1)
         numero_atual += 1
@@ -93,7 +101,13 @@ def prepara_novo_data_set(dataset):
 
                         indice_letra += 1
     loop.close()
+   
     #------------------------------------------------------------------
+    
+    progress['value'] = 40
+    root.update_idletasks() 
+    time.sleep(0.01) 
+    
     lista_links = []
     for linha in data.HTML.index:   #Percorre cada linha do dataset
         texto = data.HTML[linha]
@@ -194,6 +208,10 @@ def classifica_dataset(dataset, model, count_vect):
 def classificar (treino, arquivo):
     global relevantes
     
+    progress['value'] = 0
+    root.update_idletasks() 
+    time.sleep(1) 
+    
     X_para_treinar = treino.loc[:, "Manchete"]
     Y_para_treinar = treino.loc[:, "Relevância"]
     ##y = arquivo.loc[:, "Relevância"]
@@ -214,11 +232,22 @@ def classificar (treino, arquivo):
 
     #Dando fit no modelo SVM usando o dataset de treino
     model.fit(X_train, y_train)
+    
+    progress['value'] = 20
+    root.update_idletasks() 
+    #time.sleep(1) 
      # -------------------------------------------------------------------------------------------------------------   
     #Tratando o dataset escolhido
     dataset_escolhido_preparado = prepara_novo_data_set(arquivo)
     
+    progress['value'] = 60
+    root.update_idletasks() 
+    time.sleep(1) 
+    
     planilha_classificada = classifica_dataset(dataset_escolhido_preparado, model, count_vect)
+    progress['value'] = 80
+    root.update_idletasks() 
+    time.sleep(1) 
 
     if planilha_classificada["Relevância"].max() == 0:
         print("NENHUMA MANCHETE RELEVANTE ENCONTRADA!")
@@ -230,6 +259,10 @@ def classificar (treino, arquivo):
     # Tranformando em Excel
     #planilha = planilha_pandas.to_excel (r'base_classificada.xlsx ', index = False)
     
+    progress['value'] = 100
+    root.update_idletasks() 
+    time.sleep(1) 
+    
 
 base_para_treinar = pd.read_excel("base_pronta.xlsx")
 content = None
@@ -240,14 +273,28 @@ def open_file():
     if file is not None: 
         file_name = file.name
         print(file_name)
+        file_text.insert(END, file_name)
         content = pd.read_excel(file_name)  
   
 btn = Button(root, text ='Open', command = lambda:open_file()) 
-btn.pack(side = TOP, pady = 10)     
-    
+btn.pack()     
 
-proc = Button (root, text ='Process', command = lambda:classificar(base_para_treinar, content)) 
+
+proc = Button(root, text = 'Process', command = lambda:classificar(base_para_treinar, content)) 
 proc.pack() 
+
+root.title("Insper Metricis Classifier")
+
+btn.place(relx = 0.2, x =20, y = 20, anchor = NE)
+proc.place(relx = 0.2, x =20, y = 60, anchor = NE)
+
+file_text.pack(pady = 22)
+progress.pack(pady =0.15) 
+
+
+
+#Now to update the Label text, simply `.set()` the `StringVar`
+#my_string_var.set("Insper Metricis Classifier")
 
   
 mainloop() 
