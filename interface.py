@@ -27,13 +27,13 @@ from sklearn.metrics import confusion_matrix
 from sklearn.metrics import precision_score
 
 root = Tk() 
-root.geometry('400x130') 
+root.geometry('400x150') 
 
 progress = Progressbar(root, orient = HORIZONTAL, 
               length = 180, mode = 'determinate') 
 file_text = Text(root, height=0.5, width=22)
 
-
+output_text = Text(root, height=0.5, width=40)
   
 # This function will be used to open 
 # file in read mode and only Python files 
@@ -238,7 +238,15 @@ def classificar (treino, arquivo):
     #time.sleep(1) 
      # -------------------------------------------------------------------------------------------------------------   
     #Tratando o dataset escolhido
-    dataset_escolhido_preparado = prepara_novo_data_set(arquivo)
+    
+    try:
+        dataset_escolhido_preparado = prepara_novo_data_set(arquivo)
+    except:
+        output_text.insert(END, ' ')
+        output_text.insert(END, 'Excel format error!')
+        return
+        
+        
     
     progress['value'] = 60
     root.update_idletasks() 
@@ -250,11 +258,22 @@ def classificar (treino, arquivo):
     time.sleep(1) 
 
     if planilha_classificada["Relevância"].max() == 0:
+        output_text.insert(END, 'Nenhuma manchete relevante encontrada!')
         print("NENHUMA MANCHETE RELEVANTE ENCONTRADA!")
     else:
-        planilha_final = planilha_classificada.loc[planilha_classificada["Relevância"] == 1][["Manchete", "Link", "Relevância"]]
-        planilha = planilha_final.to_excel('base_classificada.xlsx', index = False)
-        print("A BASE DE DADOS FOI BAIXADA NA PASTA DO REPOSITÓRIO!")
+        planilha_final = planilha_classificada.loc[planilha_classificada["Relevância"] == 1][["Link", "Manchete", "Relevância"]]
+        planilha_final.columns = ["Manchete","Link", "Relevância"]
+        
+        planilha_final = pd.DataFrame(planilha_final)
+        planilha_final.drop_duplicates() 
+        try:
+            
+            planilha = planilha_final.to_excel('BASE_CLASSIFICADA.xlsx', index = False)
+            output_text.insert(END, ' ')
+            output_text.insert(END, 'Done!')
+        except:
+            output_text.insert(END, ' ')
+            output_text.insert(END, 'The file already exists!')
     
     # Tranformando em Excel
     #planilha = planilha_pandas.to_excel (r'base_classificada.xlsx ', index = False)
@@ -289,7 +308,8 @@ btn.place(relx = 0.2, x =20, y = 20, anchor = NE)
 proc.place(relx = 0.2, x =20, y = 60, anchor = NE)
 
 file_text.pack(pady = 22)
-progress.pack(pady =0.15) 
+progress.pack(pady =0.15)
+output_text.pack(pady = 20)
 
 
 
