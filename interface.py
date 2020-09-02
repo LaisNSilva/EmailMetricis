@@ -49,7 +49,7 @@ def cleanup(text):
     return text_subbed
 
 def prepara_novo_data_set(dataset):
-    data = dataset
+    data = dataset.loc[dataset["De"] == "googlealerts-noreply@google.com"]
     global relevantes    
     
     #------------------------------------------------------------------
