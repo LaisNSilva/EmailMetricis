@@ -53,27 +53,70 @@
 .principal_image{
 	width: 100%;
 	height: 400px;
-	opacity: .81
+	opacity: .8;
 }
 
 .title{
 	position: absolute;
-	top: 120px;
+	top: 90px;
 	left: 25px;
+	width: 500px;
 	color: white;
 	padding-left: 20px;
 	padding-right: 20px;
-	width: 500px;
-	font-size: 63px;
+	font-size: 50px;
 	color: white;
 	font-family: 'Work Sans', sans-serif;
 }
 
+.slogan{
+	position: absolute;
+	top: 250px;
+	left: 25px;
+	width: 500px;
+	color: white;
+	padding-left: 20px;
+	padding-right: 20px;
+	font-size: 15px;
+	color: white;
+	font-family: 'Roboto', sans-serif;
+
+}
+
+.how{
+	display: grid;
+	grid-template-rows: 50px 100px;
+	grid-template-columns: 50%;
+	text-align: center;
+	margin-top: 30px;
+	justify-content: center;
+	
+}
+
+.how_title{
+	font-size: 20px;
+	font-family: 'Work Sans', sans-serif;
+	grid-row: 1 / 1;
+	grid-column: 1 / 1;
+	justify-self: center;
+
+}
+
+.how_text{
+	grid-row: 2 / 2;
+	grid-column: 1 / 1;
+	justify-self: center;
+	font-family: 'Roboto', sans-serif;
+	font-size: 15px;
+
+}
+
+
 .descripition{
 	display: grid;
-	grid-template-rows: 100px 100px 300px;
+	grid-template-rows: 100px 50px 300px;
 	grid-template-columns: 25% 25% 25%;
-	text-align: justify;
+	text-align: center;
 	margin-top: 70px;
 	column-gap: 20px;
 	justify-content: center;
@@ -149,7 +192,7 @@
 	display: flex;
 	justify-content: center;
 	font-family: 'Work Sans', sans-serif;
-	font-size: 25px;
+	font-size: 20px;
 
 }
 
