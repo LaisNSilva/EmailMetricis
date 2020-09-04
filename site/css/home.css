@@ -1,3 +1,7 @@
+.html{
+	background-color: #f0f0f0;
+}
+
 .nav{
 	display: flex;
 	background-color: #333;
@@ -53,20 +57,22 @@
 .principal_image{
 	width: 100%;
 	height: 400px;
-	opacity: .8;
+	opacity: .79;
 }
 
 .title{
 	position: absolute;
 	top: 90px;
 	left: 25px;
-	width: 500px;
+	width: 550px;
 	color: white;
 	padding-left: 20px;
 	padding-right: 20px;
 	font-size: 50px;
 	color: white;
-	font-family: 'Work Sans', sans-serif;
+	font-family: 'Montserrat', sans-serif;
+	font-weight: 300;
+	text-transform: uppercase;
 }
 
 .slogan{
@@ -95,7 +101,9 @@
 
 .how_title{
 	font-size: 20px;
-	font-family: 'Work Sans', sans-serif;
+	font-family: 'Montserrat', sans-serif;
+	font-weight: 300;
+	text-transform: uppercase;
 	grid-row: 1 / 1;
 	grid-column: 1 / 1;
 	justify-self: center;
@@ -114,12 +122,43 @@
 
 .descripition{
 	display: grid;
-	grid-template-rows: 100px 50px 300px;
+	grid-template-rows: 450px;
 	grid-template-columns: 25% 25% 25%;
 	text-align: center;
-	margin-top: 70px;
+	margin-top: 40px;
 	column-gap: 20px;
 	justify-content: center;
+}
+
+.col1{
+	display: grid;
+	grid-template-rows: 150px 50px 300px;
+	grid-template-columns: 1fr;
+	grid-row: 1 / 1;
+	grid-column: 1 / 1;
+	background-color: white;
+	border-radius: 5px;
+}
+
+.col2{
+	display: grid;
+	grid-template-rows: 150px 50px 300px;
+	grid-template-columns: 1fr;
+	grid-row: 1 / 1;
+	grid-column: 2 / 2;
+	background-color: white;
+	border-radius: 5px;
+
+}
+
+.col3{
+	display: grid;
+	grid-template-rows: 150px 50px 300px;
+	grid-template-columns: 1fr;
+	grid-row: 1 / 1;
+	grid-column: 3 / 3;
+	background-color: white;
+	border-radius: 5px;
 }
 
 .vel_icon{
@@ -128,11 +167,14 @@
 	width: 100px;
 	height: 100px;
 	justify-self: center;
+	margin-top: 50px;
 }
 
 .velocity{
 	font-size: 20px;
-	font-family: 'Work Sans', sans-serif;
+	font-family: 'Montserrat', sans-serif;
+	font-weight: 300;
+	text-transform: uppercase;
 	grid-row: 2 / 2;
 	grid-column: 1 / 1;
 	justify-self: center;
@@ -142,6 +184,8 @@
 	font-family: 'Roboto', sans-serif;
 	grid-row: 3 / 3;
 	grid-column: 1 / 1;
+	justify-self: center;
+	width: 70%;
 }
 
 .precision_icon{
@@ -150,11 +194,14 @@
 	width: 100px;
 	height: 100px;
 	justify-self: center;
+	margin-top: 50px;
 }
 
 .precision{
 	font-size: 20px;
-	font-family: 'Work Sans', sans-serif;
+	font-family: 'Montserrat', sans-serif;
+	font-weight: 300;
+	text-transform: uppercase;
 	grid-row: 2 / 2;
 	grid-column: 2 / 2;
 	justify-self: center;
@@ -164,6 +211,8 @@
 	font-family: 'Roboto', sans-serif;
 	grid-row: 3 / 3;
 	grid-column: 2 / 2;
+	justify-self: center;
+	width: 70%;
 }
 
 .user_icon{
@@ -172,11 +221,14 @@
 	width: 100px;
 	height: 100px;
 	justify-self: center;
+	margin-top: 50px;
 }
 
 .user{
 	font-size: 20px;
-	font-family: 'Work Sans', sans-serif;
+	font-family: 'Montserrat', sans-serif;
+	font-weight: 300;
+	text-transform: uppercase;
 	grid-row: 2 / 2;
 	grid-column: 3 / 3;
 	justify-self: center;
@@ -186,84 +238,160 @@
 	font-family: 'Roboto', sans-serif;
 	grid-row: 3 / 3;
 	grid-column: 3 / 3;
+	justify-self: center;
+	width: 70%;
 }
 
 .title_tools{
+	margin-top: 50px;
 	display: flex;
 	justify-content: center;
-	font-family: 'Work Sans', sans-serif;
-	font-size: 20px;
+	font-size: 15px;
+	font-family: 'Montserrat', sans-serif;
+	font-weight: 300;
+	text-transform: uppercase;
+	background-color: #333;
+	color: white;
 
 }
 
 .tools{
+	display: grid;
+	grid-template-rows: 700px;
+	grid-template-columns: 40% 40%;
+	text-align: center;
 	justify-content: center;
-	display: flex;
-	width: auto;
-	margin: auto;
-}
+	column-gap: 40px;
+	margin-top: 50px;
 
-.ai{
-	position: relative;	
-	padding-left: 20px
 }
 
 .web{
-	position: relative;
+	display: grid;
+	grid-row: 1 / 1;
+	grid-column: 1 / 1;
+	grid-template-rows: 300px 50px 250px 80px;
+	grid-template-columns: 1fr;
+	text-align: center;
+	justify-content: center;
+	background-color: white;
 
+}
+
+.ai{
+	display: grid;
+	grid-row: 1 / 1;
+	grid-column: 2 / 2;
+	grid-template-rows: 300px 50px 250px 80px;
+	grid-template-columns: 1fr;
+	text-align: center;
+	justify-content: center;
+	background-color: white;
+
+}
+
+
+.web_image{
+	grid-row: 1 / 1;
+	grid-column: 1 / 1;
+	width: 100%;
+	height: 300px;
+}
+
+.ai_image{
+	grid-row: 1 / 1;
+	grid-column: 1 / 1;
+	width: 100%;
+	height: 300px;
 }
 
 .text_block1_title{
-	position: absolute;
-	top: 30px;
-	left: 10px;
-	color: white;
-	padding-left: 20px;
-	padding-right: 20px;
-	width: 240px;
+	grid-row: 2 / 2;
+	grid-column: 1 / 1;
+	color: black;
+	width: 100%;
+	height: 100%;
 	font-size: 30px;
-	color: white;
-	font-family: 'Work Sans', sans-serif;
+	font-family: 'Montserrat', sans-serif;
+	font-weight: 300;
+	text-transform: uppercase;
+
 }
 
 .text_block1_text{
-	position: absolute;
-	top: 100px;
-	left: 10px;
-	color: white;
-	padding-left: 20px;
-	padding-right: 20px;
-	width: 150px;
+	grid-row: 3 / 3;
+	grid-column: 1 / 1;
+	width: 70%;
+	height: 100%;
 	font-size: 18px;
-	color: white;
+	color: grey;
 	font-family: 'Roboto', sans-serif;
+	text-align: justify;
+	justify-self: center;
+	margin-top: 30px;
 }
 
 .text_block2_title{
-	position: absolute;
-	top: 20px;
-	left: 25px;
-	color: white;
-	padding-left: 20px;
-	padding-right: 20px;
-	width: 240px;
+	grid-row: 2 / 2;
+	grid-column: 1 / 1;
+	width: 100%;
+	height: 100%;
 	font-size: 30px;
-	color: white;
-	font-family: 'Work Sans', sans-serif; 
+	color: grey;
+	font-family: 'Montserrat', sans-serif;
+	font-weight: 300;
+	text-transform: uppercase;
+	color: black;
 }
 
 .text_block2_text{
-	position: absolute;
-	top: 120px;
-	left: 25px;
-	color: white;
-	padding-left: 20px;
-	padding-right: 20px;
-	width: 150px;
+	grid-row: 3 / 3;
+	grid-column: 1 / 1;
+	width: 70%;
 	font-size: 18px;
+	color: grey;
+	font-family: 'Roboto', sans-serif;
+	text-align: justify;
+	justify-self: center;
+	margin-top: 30px;
+}
+
+.button_web{
+	grid-row: 4 / 4;
+	grid-column: 1 / 1;
+	width: 150px;
+	height: 30px;
+	font-size: 23px;
 	color: white;
 	font-family: 'Roboto', sans-serif;
+	vertical-align: center;
+	justify-self: center;
+	align-self: center;
+	background-color: #6600ba;
+	border-radius: 3px;
+	text-decoration: none;
+
+
 }
+
+.button_ai{
+	grid-row: 4 / 4;
+	grid-column: 1 / 1;
+	width: 150px;
+	height: 30px;
+	font-size: 23px;
+	color: white;
+	font-family: 'Roboto', sans-serif;
+	background-color: #6600ba;
+	justify-self: center;
+	align-items: center;
+	align-self: center;
+	border-radius: 3px;
+	text-decoration: none;
+
+}
+
+
 .image{
 	width: 500px;
 	height: 300px;
@@ -275,6 +403,7 @@
 }
 
 .footer{
+	margin-top: 100px;
 	background-color: #333
 }
 
