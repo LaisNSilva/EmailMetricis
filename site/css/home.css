@@ -1,13 +1,15 @@
 .html{
-	background-color: #f0f0f0;
+	background-color: #f7f7f7;
 }
 
 .nav{
 	display: flex;
-	background-color: #333;
+	background-color: black;
 	overflow: hidden;
 	height: 70px;
-	font-family: 'Work Sans', sans-serif;
+	font-family: 'Montserrat', sans-serif;
+	font-weight: 300;
+	text-transform: uppercase;
 
 }
 
@@ -56,8 +58,8 @@
 
 .principal_image{
 	width: 100%;
-	height: 400px;
-	opacity: .79;
+	height: 600px;
+	
 }
 
 .title{
@@ -250,19 +252,19 @@
 	font-family: 'Montserrat', sans-serif;
 	font-weight: 300;
 	text-transform: uppercase;
-	background-color: #333;
+	background-color: #000000;
 	color: white;
 
 }
 
 .tools{
 	display: grid;
-	grid-template-rows: 700px;
+	grid-template-rows: 760px;
 	grid-template-columns: 40% 40%;
 	text-align: center;
 	justify-content: center;
 	column-gap: 40px;
-	margin-top: 50px;
+	background-image: "img/tools_background.png"
 
 }
 
@@ -270,11 +272,13 @@
 	display: grid;
 	grid-row: 1 / 1;
 	grid-column: 1 / 1;
-	grid-template-rows: 300px 50px 250px 80px;
+	grid-template-rows: 300px 50px 230px 80px;
 	grid-template-columns: 1fr;
 	text-align: center;
 	justify-content: center;
 	background-color: white;
+	margin-bottom: 50px;
+	margin-top: 20px;
 
 }
 
@@ -282,11 +286,13 @@
 	display: grid;
 	grid-row: 1 / 1;
 	grid-column: 2 / 2;
-	grid-template-rows: 300px 50px 250px 80px;
+	grid-template-rows: 300px 50px 230px 80px;
 	grid-template-columns: 1fr;
 	text-align: center;
 	justify-content: center;
 	background-color: white;
+	margin-bottom: 50px;
+	margin-top: 20px;
 
 }
 
@@ -404,7 +410,16 @@
 
 .footer{
 	margin-top: 100px;
-	background-color: #333
+	background-color: #000000;
+}
+
+.icones{
+	display: flex;
+}
+
+.icone{
+	width: 100px;
+	height: 80px;
 }
 
 .contact{
