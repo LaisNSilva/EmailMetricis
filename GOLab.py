@@ -4,7 +4,7 @@ Created on Sun Aug 30 11:59:35 2020
 
 @author: Lais Nascimento
 """
-from interface import *
+
 from tkinter import *
 import pandas as pd 
 from tkinter.ttk import *
@@ -136,9 +136,7 @@ def classifica_dataset(dataset, model, count_vect):
 def classificar (treino, arquivo):
     global relevantes
     
-    progress['value'] = 0
-    root.update_idletasks() 
-    time.sleep(1) 
+    
     
     X_para_treinar = treino.loc[:, "Manchete"]
     Y_para_treinar = treino.loc[:, "Relevância"]
@@ -161,37 +159,51 @@ def classificar (treino, arquivo):
     #Dando fit no modelo SVM usando o dataset de treino
     model.fit(X_train, y_train)
     
-    planilha_classificada = classifica_dataset(dataset_escolhido_preparado, model, count_vect)
+    planilha_classificada = classifica_dataset(arquivo, model, count_vect)
+    
+    if planilha_classificada["Relevância"].max() == 0:
+        print("NENHUMA MANCHETE RELEVANTE ENCONTRADA!")
+    else:
+        planilha_final = planilha_classificada.loc[planilha_classificada["Relevância"] == 1][["Link", "Manchete", "Relevância"]]
+        planilha_final.columns = ["Manchete","Link", "Relevância"]
+        
+        planilha_final = pd.DataFrame(planilha_final)
+        planilha_final.drop_duplicates() 
+        try:
+            
+            planilha = planilha_final.to_excel('ManchetesRelevantes_GOLab.xlsx', index = False)
+            
+        except:  
+            print('The file already exists!')
     
 base_para_treinar = pd.read_excel("base_pronta.xlsx")    
 
 manchetes = []
 for elemento in lista_de_projetos:
-    manchetes.append(elemento.text)
+    manchetes.append(cleanup(elemento.text))
 print(manchetes)
 
-relevantes = pd.read_excel("ManchetesRelevantes_GOLab.xlsx")
+
 
 # POR ENQUATO
 links = []
+relevancia=[]
 n=0
 for e in manchetes:
     n+=1
     links.append(n)
+    relevancia.append(1)
     
 dicionario = {}
 
-dicionario['Manchetes'] = lista_manchetes
+dicionario['Manchete'] = manchetes
 #dicionario['Indice'] = email
-dicionario['Link'] = lista_links
+dicionario['Link'] = links
+dicionario['Relevancia'] = relevancia
 
-y_pred = []
-for dado in X_novo:
-    n_dado=cleanup(dado)
-    previsao = preve(clf, model, dtc, model_lg, n_dado)
-    y_pred.append(previsao)
+resultado = pd.DataFrame(data=dicionario)
 
-data_manchetes = pd.DataFrame(data=dicionario)
+classificar(base_para_treinar, resultado)
 
 
 
