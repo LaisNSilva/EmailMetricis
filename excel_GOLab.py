@@ -16,6 +16,8 @@ import time
 
 from funcoes import *
 
+
+
 # Importar a função que classifica as manchetes
 #from funcao.ipynb import classificar
   
@@ -57,9 +59,12 @@ while n <= 10:
     
     for l in lista_de_links:
         links.append(l.text)
-
-    n+=1
+        
+    n = n+1
     driver.close()
+    
+print(manchetes)
+print(links)
 
 dicionario = {}
 
@@ -68,12 +73,8 @@ dicionario["Links"] = links
 
 resultado = pd.DataFrame(data=dicionario)
 
-#resultado.to_excel(GOLab_referencia.xlsx, index = False)
-
-ref=pd.read_excel("GOLab_referencia.xlsx")
-
-compara(ref, resultado)
-
+resultado.to_excel('GOLab_referencia.xlsx', index = False)
+    
 
 
 
