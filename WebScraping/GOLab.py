@@ -14,7 +14,7 @@ from tqdm.auto import tqdm
 from tkinter import Label
 import time
 
-from funcoes import *
+from funcoesGOLab import *
 
 # Importar a função que classifica as manchetes
 #from funcao.ipynb import classificar
@@ -56,7 +56,7 @@ while n <= 10:
         manchetes.append(elemento.text)
     
     for l in lista_de_links:
-        links.append(l.text)
+        links.append(l)
 
     n+=1
     driver.close()
@@ -72,7 +72,9 @@ resultado = pd.DataFrame(data=dicionario)
 
 ref=pd.read_excel("GOLab_referencia.xlsx")
 
-compara(ref, resultado)
+referenciais = compara(ref, resultado)
+
+referenciais = resultado.to_excel('GOLab_referencia.xlsx', index = False)
 
 
 
