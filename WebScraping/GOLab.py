@@ -69,7 +69,7 @@ dicionario["Links"] = links
 
 resultado = pd.DataFrame(data=dicionario)
 
-resultado.to_excel(GOLab_referencia.xlsx, index = False)
+
 
 ref=pd.read_excel("GOLab_referencia.xlsx")
 
