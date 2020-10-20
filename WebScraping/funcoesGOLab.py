@@ -67,7 +67,9 @@ def acha_lista(numero_de_tentativas, css_code_selector, driver):
         try:
             #lista = driver.find_elements_by_css_selector(css_code_selector)
             elementos = driver.find_elements_by_class_name("search-result__title")
-            links = driver.find_elements_by_css_selector(".search-result__link [href]")
+            links = driver.find_elements_by_class_name("search-result__link")
+            print("os links são:")
+            print(links)
             lista_links = retornaListaLinks(links)
             break
         

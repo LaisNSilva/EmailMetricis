@@ -33,7 +33,7 @@ from selenium.webdriver import ActionChains
 n = 1
 manchetes = []
 links = []
-while n <= 10:
+while n <= 1:
     url = "https://golab.bsg.ox.ac.uk/knowledge-bank/indigo-data-and-visualisation/impact-bond-dataset-v2/?page="+str(n)
 
     #cria o webdriver
@@ -61,6 +61,7 @@ while n <= 10:
     n+=1
     driver.close()
 
+
 dicionario = {}
 
 dicionario["Manchetes"] = manchetes
@@ -68,7 +69,7 @@ dicionario["Links"] = links
 
 resultado = pd.DataFrame(data=dicionario)
 
-#resultado.to_excel(GOLab_referencia.xlsx, index = False)
+resultado.to_excel(GOLab_referencia.xlsx, index = False)
 
 ref=pd.read_excel("GOLab_referencia.xlsx")
 
