@@ -5,11 +5,8 @@ Created on Mon Aug 24 19:58:37 2020
 @author: Fernando
 """
 import pandas as pd
-from bs4 import BeautifulSoup
 from selenium import webdriver
-from webdriver_manager.chrome import ChromeDriverManager
 import time
-from selenium.webdriver import ActionChains
 
 #determina a url do site desejado
 url = "https://sibdatabase.socialfinance.org.uk/"
@@ -21,7 +18,7 @@ driver = webdriver.Chrome(executable_path=r'./chromedriver.exe')
 driver.get(url)
 
 #tempo para carregar a página inteira
-time.sleep(15)
+time.sleep(5)
 
 #------------------------------------------------------------------------------
 def acha_lista(numero_de_tentativas, css_code_selector):
@@ -126,11 +123,28 @@ def lista_links(ids_projetos):
         
     return lista_links
     
-#------------------------------------------------------------------------------               
+#------------------------------------------------------------------------------  
+def atualizaBackUP(lista_com_ids):
+    
+    #lê o arquivo excel
+    df = pd.read_excel("./Backup/socialFinance.xlsx")
+    
+    for id_ in lista_com_ids:
+        
+        #cria uma nova linha com o id novo
+        new_row = {"informacoes":id_}
+        
+        #escreve a linha no excel
+        df = df.append(new_row, ignore_index=True)
+    
+    df.to_excel("./Backup/socialFinance.xlsx", index=False)
+    
+    return 
+
+#------------------------------------------------------------------------------
                 
 #cria a lista com projetos já inseridos
-lista_projetos_inseridos = le_excel_social_finance("Sofial_Finance.xlsx")
-lista_projetos_inseridos = lista_projetos_inseridos[0:len(lista_projetos_inseridos)-10] 
+lista_projetos_inseridos = le_excel_social_finance("./Backup/socialFinance.xlsx")
 
 #encontra a lista de projetos com os respectivos códigos
 lista_de_projetos = acha_lista(1000, "#ngo > div.project-list.clearfix > div")
@@ -143,6 +157,10 @@ lista_ids = separa_id(lista_de_projetos_novos)
 
 #cria uma lista com os links dos projetos novos
 lista_links_novos = lista_links(lista_ids)
+
+#atualizando a lista de ids backups
+atualizaBackUP(lista_ids)
+
 
 
 

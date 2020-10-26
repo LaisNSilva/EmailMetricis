@@ -1,9 +1,6 @@
 import pandas as pd
-from bs4 import BeautifulSoup
 from selenium import webdriver
-from webdriver_manager.chrome import ChromeDriverManager
 import time
-from selenium.webdriver import ActionChains
 
 ##----------------------------------------------
 def retornaListaLinks(elementos):
@@ -31,7 +28,7 @@ def pegaListaAntigos(arquivo_excel):
     df = pd.read_excel(arquivo_excel)
 
     #adiciona todos os links antigos na lista de resposta
-    df["linksAntigos"].apply(lambda x: resposta.append(x))
+    df["informacoes"].apply(lambda x: resposta.append(x))
 
     return resposta
 
@@ -56,13 +53,31 @@ def comparaListas(lista1, lista2):
     
     return resposta
 
-##----------------------------------------------
+##----------------------------------------------  
+def atualizaBackUP(lista_com_links):
+    
+    #lê o arquivo excel
+    df = pd.read_excel("./Backup/instiglio.xlsx")
+    
+    for id_ in lista_com_links:
+        
+        #cria uma nova linha com o id novo
+        new_row = {"informacoes":id_}
+        
+        #escreve a linha no excel
+        df = df.append(new_row, ignore_index=True)
+    
+    df.to_excel("./Backup/instiglio.xlsx", index=False)
+    
+    return 
+
+##----------------------------------------------  
             
 #determina a url do site desejado
 url = "https://www.instiglio.org/en/projects/"
 
 #cria o webdriver
-driver = webdriver.Chrome(executable_path=r'C:\Users\ferna\Documents\ChromeDriver\chromedriver.exe')
+driver = webdriver.Chrome(executable_path=r'./chromedriver.exe')
 
 #pega o conteúdo da url
 driver.get(url)
@@ -77,9 +92,12 @@ elementos = driver.find_elements_by_css_selector(".wpb_wrapper [href]")
 lista_links = retornaListaLinks(elementos)
 
 #cria a lista de antigos:
-lista_antigos = pegaListaAntigos("instiglio.xlsx")
+lista_antigos = pegaListaAntigos("./Backup/instiglio.xlsx")
 
 #cria a lista com os links novos
 lista_novos_links = comparaListas(lista_links, lista_antigos)
+
+#atualiza o arquivo de backup
+atualizaBackUP(lista_novos_links)
 
 
