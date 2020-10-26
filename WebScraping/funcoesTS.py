@@ -43,6 +43,10 @@ def acha_lista(numero_de_tentativas, css_code_selector, driver):
     tentativa_atual = 0 
     
     #define um número limite de tentativas
+    elementos=[]
+    acabou = False
+    l = 1
+    i = 1
     while tentativa_atual < numero_de_tentativas:
         #lista = driver.find_elements_by_css_selector(css_code_selector)
         #elementos = lista.find_elements_by_class_name("project")
@@ -50,9 +54,17 @@ def acha_lista(numero_de_tentativas, css_code_selector, driver):
         
         #tenta clicar no botão
         try:
-            #lista = driver.find_elements_by_css_selector(css_code_selector)
-            elementos = driver.find_elements_by_class_name("row-title project-title")
-            #links = driver.find_elements_by_class_name("search-result__link")
+            
+            while l != 0 :
+                #try:
+                elemento = driver.find_elements_by_xpath('/html/body/div[1]/div[3]/div[2]/div[2]/table/tbody/tr['+str(i)+']/td[1]')
+                l = len(elemento)
+                elementos.append(elemento)
+                i=i+2
+            print(i)
+                     
+                #except:
+                    #acabou = True
             break
         
         #caso não funcione, aumenta a tentativa
@@ -95,6 +107,6 @@ def compara(arquivo, dados):
 
     resultado = pd.DataFrame(data=dic)
 
-    resultado.to_excel('GOLab.xlsx', index = False)
+    resultado.to_excel('TS.xlsx', index = False)
 
     return referencias

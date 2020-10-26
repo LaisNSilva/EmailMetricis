@@ -36,26 +36,36 @@ while n <= 1:
 
     #fecha pop-up
     tentativa(1000, "#ngo > div.ngo-popup > div.got-it", driver)
+    print('tentativas')
 
-    lista_de_projetos = acha_lista(1000, "#ngo > div.row-title project-title > div", driver)
+    lista_de_projetos = acha_lista(1000, "#ngo > div.portifolio-table-nav > div", driver)
+    print("lista de projetos")
+    #print(lista_de_projetos)
 
 
-    for elemento in lista_de_projetos:
-        print(elemento.text)
-    
+    for l_elemento in lista_de_projetos:
+        for e in l_elemento:
+            #print(e.text)
+            manchetes.append(e.text)
     
         
     n = n+1
     driver.close()
     
+    
+    
 #print(manchetes)
+    
+    
+dicionario = {}
+
+dicionario["Manchetes"] = manchetes
 
 
-#dicionario = {}
+resultado = pd.DataFrame(data=dicionario)
 
-#dicionario["Manchetes"] = manchetes
+ref=pd.read_excel("TS_referencia.xlsx")
 
+referenciais = compara(ref, resultado)
 
-#resultado = pd.DataFrame(data=dicionario)
-
-#resultado.to_excel('GOLab_referencia.xlsx', index = False)
+referenciais = resultado.to_excel('TS_referencia.xlsx', index = False)
