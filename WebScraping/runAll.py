@@ -7,10 +7,10 @@ Created on Thu Oct 22 17:22:18 2020
 import pandas as pd
 import datetime
 
-def criaDicionario(social, instiglio):
+def criaDicionario(social, instiglio, GOLab, ThirdSector):
 
     #cria o dataframe com as novidades de cada site
-    df = pd.DataFrame({'Social_Finance': pd.Series(social), 'Instiglio': pd.Series(instiglio)})
+    df = pd.DataFrame({'Social_Finance': pd.Series(social), 'Instiglio': pd.Series(instiglio), 'GOLab': pd.Series(GOLab), 'Third Sector': pd.Series(ThirdSector)} )
     
     return df
 
@@ -35,14 +35,26 @@ exec(open('instiglio.py').read())
 #cria uma lista com os novos do social finance
 novos_instiglio = lista_novos_links
 
+#executa o arquivo do GOLab
+exec(open('GOLab.py').read())
+#cria uma lista com os novos do GOLab
+novos_GOLab = lista_novos_links
+
+#executa o arquivo do Third Sector
+exec(open('TS.py').read())
+#cria uma lista com os novos do Third Sector
+novos_ThirdSector = lista_novos_links
+
+
+
 #verifica se tem novidade
-novidade = verificaNovidade(novos_socialFinance, novos_instiglio, [], [])
+novidade = verificaNovidade(novos_socialFinance, novos_instiglio, novos_GOLab, novos_ThirdSector)
 
 #se tiver novidade...
 if novidade == True:
 
     #cria o dataframe que será transformado em excel
-    df = criaDicionario(novos_socialFinance, novos_instiglio)
+    df = criaDicionario(novos_socialFinance, novos_instiglio, novos_GOLab, novos_ThirdSector)
     
     df = df.fillna("No Data")
     
