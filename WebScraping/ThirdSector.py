@@ -66,6 +66,7 @@ resultado = pd.DataFrame(data=dicionario)
 
 ref=pd.read_excel("TS_referencia.xlsx")
 
-referenciais = compara(ref, resultado)
+referenciais, lista_novos_links = compara(ref, resultado)
 
 referenciais = resultado.to_excel('TS_referencia.xlsx', index = False)
+

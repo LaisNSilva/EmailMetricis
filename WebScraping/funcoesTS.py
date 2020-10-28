@@ -109,4 +109,4 @@ def compara(arquivo, dados):
 
     resultado.to_excel('TS.xlsx', index = False)
 
-    return referencias
+    return referencias, novas_manchetes

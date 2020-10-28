@@ -73,7 +73,7 @@ resultado = pd.DataFrame(data=dicionario)
 
 ref=pd.read_excel("GOLab_referencia.xlsx")
 
-referenciais = compara(ref, resultado)
+referenciais, lista_novos_links = compara(ref, resultado)
 
 referenciais = resultado.to_excel('GOLab_referencia.xlsx', index = False)
 

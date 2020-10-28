@@ -118,4 +118,4 @@ def compara(arquivo, dados):
 
     resultado.to_excel('GOLab.xlsx', index = False)
 
-    return referencias
+    return referencias, novos_links

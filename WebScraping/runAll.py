@@ -41,7 +41,7 @@ exec(open('GOLab.py').read())
 novos_GOLab = lista_novos_links
 
 #executa o arquivo do Third Sector
-exec(open('TS.py').read())
+exec(open('ThirdSector.py').read())
 #cria uma lista com os novos do Third Sector
 novos_ThirdSector = lista_novos_links
 
